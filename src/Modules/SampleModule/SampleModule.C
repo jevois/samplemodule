@@ -51,11 +51,7 @@
     @otherurl http://samplecompany.com/about
     @license GPL v3
     @distribution Unrestricted
-    @restrictions None
-    @jevoispkg samplemodule
-    @jevoisvend SampleVendor
-    @subcomponents 
-    @keywords sample, hello world */
+    @restrictions None */
 class SampleModule : public jevois::Module
 {
   public:
