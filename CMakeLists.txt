@@ -41,5 +41,5 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 jevois_setup_modules(src/Modules "")
 
 # Add any link libraries for each module:
-target_link_libraries(SampleModule opencv_imgproc opencv_core)
+target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_core)
 
