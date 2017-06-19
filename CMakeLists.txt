@@ -43,3 +43,5 @@ jevois_setup_modules(src/Modules "")
 # Add any link libraries for each module:
 target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_core)
 
+# Wrapping up:
+jevois_project_finalize()  # call this last in your CMakeLists.txt, will un-mount the live microSD if applicable
