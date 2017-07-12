@@ -5,7 +5,7 @@
 # The caller script will set the current directory to the location of this script before launching the script.
 
 # Add our video mappings to the main mappings file:
-cat videomappings.cfg >> /jevois/config/videomappings.cfg
+jevois-add-videomapping YUYV 640 480 28.5 YUYV 640 480 28.5 SampleVendor SampleModule
 
 # Example of a simple message:
 echo "SampleModule is now installed"
