@@ -35,12 +35,28 @@ project(samplemodule)
 jevois_project_set_flags()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-# Setup our modules that are in src/Modules. First arg: source directory for modules; 2nd arg: target dependencies,
-# usually empty for a single module. See the CMakeLists.txt in jevoisbase for an example where we first build a shared
-# library for all shared components, and then each module gets this library as a target dependency:
+# If your module will use components provided by jevoisbase, uncomment the lines below. You will also need to set
+# JEVOIS_SRC_ROOT environment variable in your shell to the parent of the jevoisbase directory, e.g., type:
+#   export JEVOIS_SRC_ROOT=/home/myname
+# in your shell.
+
+#if (JEVOIS_PLATFORM)
+#  link_directories("/var/lib/jevois-microsd/lib/JeVois") # find libjevoisbase.so for platfrm
+#endif (JEVOIS_PLATFORM)
+#include_directories("$ENV{JEVOIS_SRC_ROOT}/jevoisbase/include/jevoisbase") # find jevoisbase includes
+
+# If you also want to use some of the jevoisbase contribs, just add the appropriate include paths here:
+#include_directories("$ENV{JEVOIS_SRC_ROOT}/jevoisbase/Contrib/darknet-nnpack/include")
+#include_directories("$ENV{JEVOIS_SRC_ROOT}/jevoisbase/Contrib/NNPACK/include")
+#include_directories("$ENV{JEVOIS_SRC_ROOT}/jevoisbase/Contrib/pthreadpool/include")
+
+# Setup our modules that are in src/Modules. First arg: source directory for modules; 2nd arg: target build dependencies
+# (i.e., cmake targets which must be built here before we build the modules), usually empty for a single module. See the
+# CMakeLists.txt in jevoisbase for an example where we first build a shared library for all shared components, and then
+# each module gets this library as a target dependency:
 jevois_setup_modules(src/Modules "")
 
-# Add any link libraries for each module:
+# Add any link libraries for each module. Add 'jevoisbase' here if you want to link against it:
 target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_core)
 
 # Wrapping up:
