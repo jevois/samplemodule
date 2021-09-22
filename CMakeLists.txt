@@ -23,7 +23,16 @@ cmake_minimum_required(VERSION 3.1)
 
 ## Set vendor names, our modules will be placed in a directory by that name under /jevois/modules:
 set(JEVOIS_VENDOR "SampleVendor")
-set(JEVOIS_CONFIG "/jevois/config" CACHE STRING "Path to JeVois config to use")
+if (JEVOIS_HARDWARE STREQUAL "PRO")
+  set(JEVOIS_CONFIG "/jevoispro/config" CACHE STRING "Path to JeVois config to use")
+else()
+  set(JEVOIS_CONFIG "/jevois/config" CACHE STRING "Path to JeVois config to use")
+endif()
+
+## Set a version for your module, used to create the .deb package for platform:
+set(MOD_VERSION_MAJOR 1)
+set(MOD_VERSION_MINOR 0)
+set(MOD_VERSION_PATCH 0)
 
 ## Include helper functions, config, etc from the JeVois install:
 set(CMAKE_MODULE_PATH ${JEVOIS_CONFIG})
@@ -37,9 +46,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 ## If your module will use components provided by jevoisbase, uncomment the lines below:
 #if (JEVOIS_PLATFORM)
-#  link_directories("/var/lib/jevois-microsd/lib/JeVois") # find libjevoisbase.so for platform
+#  link_directories("/var/lib/${JEVOIS}-microsd/lib/JeVois") # find libjevoisbase.so for platform
 #endif (JEVOIS_PLATFORM)
-#include_directories("/var/lib/jevois-build/usr/include") # find jevoisbase includes
+#include_directories("/var/lib/${JEVOIS}-build/usr/include") # find jevoisbase includes
 
 ## If you also want to use some of the jevoisbase contribs, just add the appropriate include paths here.  You will also
 ## need to set JEVOIS_SRC_ROOT environment variable in your shell to the parent of the jevoisbase directory, e.g., type:
@@ -55,12 +64,39 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 ## components, and then each module gets this library as a target dependency:
 jevois_setup_modules(src/Modules "")
 
-## Add any link libraries for each module. Add 'jevoisbase' here if you want to link against it:
+## Add any link libraries for each module. Add '${JEVOIS}base' here if you want to link against it:
 target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_core)
 
 ## Install any shared resources (cascade classifiers, neural network weights, etc) in the share/ sub-directory:
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/share"
-  DESTINATION "${JEVOIS_INSTALL_ROOT}" COMPONENT bin)
+  DESTINATION "${JEVOIS_MODULES_ROOT}" COMPONENT bin)
+
+########################################################################################################################
+# Debian packaging:
+
+# To list the files created in a package, run: dpkg -c <package.deb>
+set(CPACK_PACKAGE_DESCRIPTION "JeVois SampleModule")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "JeVois SampleModule")
+set(CPACK_PACKAGE_CONTACT "Laurent Itti <jevois.org@gmail.com>")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${CPACK_PACKAGE_CONTACT})
+set(CPACK_DEBIAN_PACKAGE_SECTION "universe")
+set(CPACK_PACKAGE_VENDOR "iLab at the University of Southern California")
+set(CPACK_PACKAGE_VERSION_MAJOR "${MOD_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${MOD_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${MOD_VERSION_PATCH}")
+set(JEVOIS_PACKAGE_RELEASE "1") # packager revision number
+
+if (JEVOIS_PLATFORM)
+  set(JEVOIS_DEPEND "${JEVOIS}-platform (>=${JEVOIS_VERSION_MAJOR}.${JEVOIS_VERSION_MINOR}.${JEVOIS_VERSION_PATCH})")
+else (JEVOIS_PLATFORM)
+  set(JEVOIS_DEPEND "${JEVOIS}-host (>=${JEVOIS_VERSION_MAJOR}.${JEVOIS_VERSION_MINOR}.${JEVOIS_VERSION_PATCH})")
+endif (JEVOIS_PLATFORM)
+
+# Add any other dependencies here for the package, separated by commas:
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "${JEVOIS_DEPEND}")
+
+# Use helper from JeVois.cmake for all other settings:
+jevois_setup_cpack(samplemodule)
 
 ## Wrapping up:
 jevois_project_finalize()  # call this last in your CMakeLists.txt, will un-mount the live microSD if applicable

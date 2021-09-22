@@ -17,6 +17,7 @@
 
 #include <jevois/Core/Module.H>
 #include <jevois/Image/RawImageOps.H>
+#include <jevois/Debug/Timer.H>
 
 // icon by Catalin Fertu in cinema at flaticon
 
@@ -61,7 +62,9 @@ class SampleModule : public jevois::Module
     //! Virtual destructor for safe inheritance
     virtual ~SampleModule() { }
 
+    // ####################################################################################################
     //! Processing function
+    // ####################################################################################################
     virtual void process(jevois::InputFrame && inframe, jevois::OutputFrame && outframe) override
     {
       // Wait for next available camera image:
@@ -88,6 +91,63 @@ class SampleModule : public jevois::Module
       // Send the output image with our processing results to the host over USB:
       outframe.send(); // NOTE: optional here, outframe destructor would call it anyway
     }
+
+    // ####################################################################################################
+    //! Processing function with no USB output (headless)
+    // ####################################################################################################
+    virtual void process(jevois::InputFrame && inframe) override
+    {
+      // Wait for next available camera image:
+      jevois::RawImage const inimg = inframe.get(true);
+      
+      // Do something with the frame...
+      
+      // ...
+
+      // Let camera know we are done processing the input image:
+      inframe.done(); // NOTE: optional here, inframe destructor would call it anyway
+      
+      // Send some results to serial port:
+      sendSerial("This is an example -- fixme");
+    }
+    
+#ifdef JEVOIS_PRO
+    // ####################################################################################################
+    //! Processing function with zero-copy and GUI on JeVois-Pro
+    // ####################################################################################################
+    virtual void process(jevois::InputFrame && inframe, jevois::GUIhelper & helper) override
+    {
+      static jevois::Timer timer("processing", 100, LOG_DEBUG);
+      
+      // Start the GUI frame: will return display size in winw, winh, and whether mouse/keyboard are idle
+      unsigned short winw, winh;
+      bool idle = helper.startFrame(winw, winh);
+
+      // Draw the camera frame: will return its location (x,y) and size (iw,ih) on screen
+      int x = 0, y = 0; unsigned short iw = 0, ih = 0;
+      helper.drawInputFrame("camera", inframe, x, y, iw, ih);
+
+      // Wait for next available camera image to be used for processing (possibly at a lower resolution):
+      jevois::RawImage const inimg = inframe.getp();
+      helper.itext("JeVois-Pro Sample module");
+     
+      timer.start();
+
+      // Process inimg and draw some results in the GUI, possibly send some serial messages too...
+
+      // ...
+      
+      // Show processing fps:
+      std::string const & fpscpu = timer.stop();
+      helper.iinfo(inframe, fpscpu, winw, winh);
+      
+      // Render the image and GUI:
+      helper.endFrame();
+
+      (void)idle; // avoid compiler warning since we did not use idle in this example
+    }
+
+#endif // JEVOIS_PRO
 };
 
 // Allow the module to be loaded as a shared object (.so) file:
