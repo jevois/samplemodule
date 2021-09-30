@@ -68,8 +68,8 @@ jevois_setup_modules(src/Modules "")
 target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_core)
 
 ## Install any shared resources (cascade classifiers, neural network weights, etc) in the share/ sub-directory:
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/share"
-  DESTINATION "${JEVOIS_MODULES_ROOT}" COMPONENT bin)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/share-${JEVOIS}/"
+  DESTINATION "${JEVOIS_MODULES_ROOT}/share" COMPONENT bin)
 
 ########################################################################################################################
 # Debian packaging:
