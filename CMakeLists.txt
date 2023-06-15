@@ -71,6 +71,13 @@ target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_c
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/share-${JEVOIS}/"
   DESTINATION "${JEVOIS_MODULES_ROOT}/share" COMPONENT bin)
 
+## Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
+if (JEVOIS_PLATFORM)
+  include_directories(${JEVOIS_BUILD_BASE}/${JEVOIS_MODULES_ROOT}/include)
+else ()
+  include_directories(${JEVOIS_MODULES_ROOT}/include)
+endif ()
+
 ########################################################################################################################
 # Debian packaging:
 

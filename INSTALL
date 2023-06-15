@@ -17,21 +17,21 @@
 INSTALLATION INSTRUCTIONS
 =========================
 
-To compile and install for host:
---------------------------------
+JeVois-A33: To compile and install for host:
+--------------------------------------------
 
 ./rebuild-host.sh
 
 
-To cross-compile for platform hardware and install to the jevois-sdk:
----------------------------------------------------------------------
+JeVois-A33: To cross-compile for platform hardware and install to staging area:
+-------------------------------------------------------------------------------
 
-./rebuild-platform.sh -DJEVOIS_MODULES_TO_BUILDROOT=ON
+./rebuild-platform.sh --staging
 
 The package will be included next time you flash a custom microSD card using jevois-build.sh in jevois-sdk.
 
-To cross-compile for platform hardware and install to jvpkg package:
---------------------------------------------------------------------
+JeVois-A33: To cross-compile for platform hardware and install to jvpkg package:
+--------------------------------------------------------------------------------
 
 ./rebuild-platform.sh
 cd pbuild
@@ -40,3 +40,20 @@ cd ..
 
 Then just copy the resulting .jvpkg file to the JEVOIS:/packages/ folder on your microSD card. The JeVois smart camera
 will unpack and install it next time it starts up.
+
+
+JeVois-Pro: To compile and install for host:
+--------------------------------------------
+
+./rebuild-pro-host.sh
+
+
+JeVois-Pro: To cross-compile for platform hardware and pack into a .deb package:
+--------------------------------------------------------------------------------
+
+./rebuild-pro-platform-pdeb.sh
+
+this will create a .deb file for arm64 architecture (the processor of JeVois-Pro) that you can then copy to the
+microSD of your JeVois-Pro and install on your running camera using the following command in the JeVois-Pro console:
+
+!dpkg -i /location/of/debfile.deb
