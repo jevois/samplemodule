@@ -73,6 +73,8 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/share-${JEVOIS}/"
 
 ## Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
 if (JEVOIS_PLATFORM)
+  include_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX_PDEB})
+  include_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX})
   include_directories(${JEVOIS_BUILD_BASE}/${JEVOIS_MODULES_ROOT}/include)
 else ()
   include_directories(${JEVOIS_MODULES_ROOT}/include)
