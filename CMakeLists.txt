@@ -44,6 +44,21 @@ project(samplemodule)
 jevois_project_set_flags()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+## Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
+# Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
+if (JEVOIS_PLATFORM)
+  include_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX}/include)
+  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include)
+  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/imgui)
+  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/function2)
+  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/ImGuiColorTextEdit)
+  include_directories(${JEVOIS_BUILD_BASE}/${JEVOIS_MODULES_ROOT}/include)
+  link_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/lib/JeVois) # in case we need libjevois[pro]base.so
+  link_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX}/lib) # for libjevois[pro].so, etc
+else ()
+  include_directories(${JEVOIS_MODULES_ROOT}/include)
+endif ()
+
 ## If your module will use components provided by jevoisbase, uncomment the lines below:
 #if (JEVOIS_PLATFORM)
 #  link_directories("/var/lib/${JEVOIS}-microsd/lib/JeVois") # find libjevoisbase.so for platform
@@ -70,21 +85,6 @@ target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_c
 ## Install any shared resources (cascade classifiers, neural network weights, etc) in the share/ sub-directory:
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/share-${JEVOIS}/"
   DESTINATION "${JEVOIS_MODULES_ROOT}/share" COMPONENT bin)
-
-## Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
-# Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
-if (JEVOIS_PLATFORM)
-  include_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX}/include)
-  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include)
-  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/imgui)
-  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/function2)
-  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/ImGuiColorTextEdit)
-  include_directories(${JEVOIS_BUILD_BASE}/${JEVOIS_MODULES_ROOT}/include)
-  link_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/lib/JeVois) # in case we need libjevois[pro]base.so
-  link_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX}/lib) # for libjevois[pro].so, etc
-else ()
-  include_directories(${JEVOIS_MODULES_ROOT}/include)
-endif ()
 
 ########################################################################################################################
 # Debian packaging:
