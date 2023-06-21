@@ -44,6 +44,8 @@ project(samplemodule)
 jevois_project_set_flags()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+file(MAKE_DIRECTORY share-jevois share-jevoispro)
+
 ## Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
 # Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
 if (JEVOIS_PLATFORM)
