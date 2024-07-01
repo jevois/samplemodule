@@ -19,7 +19,7 @@
 ## You may provide the installed JeVois config root as:
 #   cmake -DJEVOIS_CONFIG=/jevois/config ..
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.6)
 
 ## Set vendor names, our modules will be placed in a directory by that name under /jevois/modules:
 set(JEVOIS_VENDOR "SampleVendor")
