@@ -82,7 +82,7 @@ endif ()
 jevois_setup_modules(src/Modules "")
 
 ## Add any link libraries for each module. Add '${JEVOIS}base' here if you want to link against it:
-target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS} opencv_imgproc opencv_core)
+target_link_libraries(SampleModule ${JEVOIS_OPENCV_LIBS})
 
 ## Install any shared resources (cascade classifiers, neural network weights, etc) in the share/ sub-directory:
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/share-${JEVOIS}/"
