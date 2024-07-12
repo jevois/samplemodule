@@ -47,15 +47,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 file(MAKE_DIRECTORY share-jevois share-jevoispro)
 
 ## Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
-# Find any include files installed by JeVois into /${JEVOIS}/include, e.g., imgui:
+file(GLOB JVINCLUDES "/${JEVOIS}/include/*" "/${JEVOIS}/include/*/include")
+FOREACH(child ${JVINCLUDES})
+  IF (IS_DIRECTORY "${child}")
+    include_directories("${child}")
+  ENDIF()
+ENDFOREACH()
+
 if (JEVOIS_PLATFORM)
   include_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX}/include)
   include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include)
-  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/imgui)
-  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/function2)
-  include_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/include/ImGuiColorTextEdit)
   include_directories(${JEVOIS_BUILD_BASE}/${JEVOIS_MODULES_ROOT}/include)
-  link_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/lib/JeVois) # in case we need libjevois[pro]base.so
+  link_directories(${JEVOIS_PLATFORM_MODULES_ROOT}/lib) # in case we need libjevois[pro]base.so
   link_directories(${JEVOIS_PLATFORM_INSTALL_PREFIX}/lib) # for libjevois[pro].so, etc
 else ()
   include_directories(${JEVOIS_MODULES_ROOT}/include)
