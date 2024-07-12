@@ -63,9 +63,9 @@ endif ()
 
 ## If your module will use components provided by jevoisbase, uncomment the lines below:
 #if (JEVOIS_PLATFORM)
-#  link_directories("/var/lib/${JEVOIS}-microsd/lib/JeVois") # find libjevoisbase.so for platform
+#  link_directories("/var/lib/${JEVOIS}-microsd/lib") # find libjevoisbase.so for platform
 #endif (JEVOIS_PLATFORM)
-#include_directories("/var/lib/${JEVOIS}-build/usr/include") # find jevoisbase includes
+include_directories("/var/lib/${JEVOIS}-build/usr/include") # find includes for jevois contrib and jevoisbase
 
 ## If you also want to use some of the jevoisbase contribs, just add the appropriate include paths here.  You will also
 ## need to set JEVOIS_SRC_ROOT environment variable in your shell to the parent of the jevoisbase directory, e.g., type:
